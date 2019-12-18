@@ -1,0 +1,133 @@
+<html>
+
+<head>
+    <script type="text/javascript" src="http://shopee.vn/static/jslib_min/jslib_base.js"></script>
+    <script type="text/javascript" src="http://shopee.vn/static/jsutil/site.js"></script>
+    <script type="text/javascript" src="http://shopee.vn/static/jsutil_min/jsutil_base.js"></script>
+    <script type="text/javascript" src="http://shopee.vn/static/jsutil/BJBridgeReceiver.js"></script>
+
+    <style>
+        .button {
+            font-size: 50px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .cmd-wrapper {
+            border: 1px black solid;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+
+        .cmd-wrapper .button {
+            margin-top: 10px;
+        }
+
+        .cmd-wrapper .cmd-title {
+            font-size: 50px;
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+
+        .input-wrapper {
+            font-size: 50px;
+            width: 100%;
+        }
+
+        .input-wrapper input {
+            font-size: 50px;
+            width: 100%;
+        }
+
+        .textarea {
+            width: 100%;
+            height: 300px;
+            font-size: 50px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="cmd-wrapper">
+            <div class="cmd-title">configurePage</div>
+            <div class="input-wrapper">
+                <span class="title">config</span>
+                <input id="configurePage-config" value='{ "title": "This title from configurePage" }' />
+            </div>
+
+            <button id="configurePage" class="button">ConfigurePage</button>
+        </div>
+
+        <div class="cmd-wrapper">
+            <div class="cmd-title">navigate</div>
+            <div class="input-wrapper">
+                <span class="title">url</span>
+                <input id="navigate-url" value="http://google.com.vn" />
+            </div>
+
+            <button id="navigate" class="button">Navigate</button>
+        </div>
+
+        <div class="cmd-wrapper">
+            <div class="cmd-title">popWebView</div>
+            <div class="input-wrapper">
+                <span class="title">data</span>
+                <input id="popWebView-data" value='{ "key": "value" }' />
+            </div>
+
+            <div class="input-wrapper">
+                <span class="title">count</span>
+                <input id="popWebView-count" value="1" />
+            </div>
+
+            <button id="popWebView" class="button">PopWebView</button>
+        </div>
+
+        <div class="cmd-wrapper">
+            <div class="cmd-title">Custom command</div>
+            <div class="input-wrapper">
+                <span class="title">command</span>
+                <input id="custom-cmd-name" value="navigate" />
+            </div>
+            <div style="font-size: 50px">data</span>
+                <textarea id="custom-command" class="textarea">{ "url": "https://google.com.vn" }</textarea>
+                <button id="run-custom-cmd" class="button">Run Command</button>
+            </div>
+        </div>
+
+        <script>
+            _gatap_force_disable_(true); // Without this, app will hijack touch event and trigger tap event only.
+            BI_ANALYTICS.pauseSend(); // This will disable data tracking.
+            bridgeInit(function () {
+                bridgeCallHandler('configurePage', {
+                    navbar: { title: "This title from configurePage" }
+                });
+                document.getElementById('configurePage').addEventListener('click', () => {
+                    bridgeCallHandler('configurePage', {
+                        navbar: JSON.parse(document.getElementById('configurePage-config').value),
+                    });
+                });
+                document.getElementById('popWebView').addEventListener('click', () => {
+                    bridgeCallHandler('popWebView', {
+                        data: document.getElementById('popWebView-data').value,
+                        count: parseInt(document.getElementById('popWebView-count').value, 10),
+                    });
+                });
+                document.getElementById('navigate').addEventListener('click', () => {
+                    bridgeCallHandler('navigate', {
+                        url: document.getElementById('navigate-url').value,
+                    });
+                });
+                document.getElementById('run-custom-cmd').addEventListener('click', () => {
+                    bridgeCallHandler(
+                        document.getElementById('custom-cmd-name').value,
+                        JSON.parse(document.getElementById('custom-command').value)
+                    );
+                });
+            });
+        </script>
+</body>
+
+</html>
